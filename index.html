@@ -11,7 +11,14 @@
 </head>
 <body>
   <div class="container">
-    <div id="player1">
+    <form id="new-game">
+      <div class="form-group">
+        <label for="number-of-players">How many players? Up to 10:</label>
+        <input id="number-of-players" type="number" required>
+      </div>
+      <button type="submit" class="btn">Confirm</button>
+    </form>
+    <!-- <div id="player1">
       <h3>Player 1's Score:</h3>
       <h4><span id="score1"></span></h4>
       <h4>Current Total:</h4>
@@ -22,12 +29,12 @@
       <h4><span id="score2"></span></h4>
       <h4>Current Total:</h4>
       <h5><span id="total2"></span></h5>
-    </div>
+    </div> -->
     <button id="roll" type="click" class="btn">Roll</button>
+    <button id="hold" type="click" class="btn">Hold</button>
     <div id="result">
 
     </div>
-    <button id="hold" type="click" class="btn">Hold</button>
   </div>
 </body>
 </html>

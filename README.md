@@ -32,9 +32,10 @@ Open using Git Pages:
 
 ## Specs
 
-| |
+Behavior|Input|Output
 ------|------|------
-| |
+
+
 
 ## Known Bugs
 

@@ -1,3 +1,11 @@
+function Game() {
+  this.players = []
+}
+
+Game.prototype.addToGame = function(player) {
+  return this.players.push(player);
+}
+
 function Player() {
   this.score = 0,
   this.currentTotal = 0
@@ -22,9 +30,26 @@ const randomInt = function() {
 }
 
 $(document).ready(function() {
+  let player1 = new Player();
+  let player2 = new Player();
+  let currentPlayer = player1;
+  $("#score1").text(player1.score);
+  $("#score2").text(player2.score);
   $("#die-roll").click(function(event) {
     event.preventDefault();
     const result = randomInt();
     $("#result").text(result);
+    if (result === 1) {
+      currentPlayer.resetCurrentTotal();
+      if (currentPlayer === player1) {
+        currentPlayer = player2;
+      } else {
+        currentPlayer = player1;
+      }
+    } else {
+      currentPlayer.addToCurrentTotal();
+    }
+    $("#total1").text(player1.currentTotal);
+    $("#total2").text(player2.currentTotal);
   });
 });

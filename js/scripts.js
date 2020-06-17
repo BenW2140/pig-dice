@@ -1,6 +1,6 @@
 function Game() {
-  this.players = [];
-  this.currentId = 0;
+  this.players = [],
+  this.currentId = 0
 }
 
 Game.prototype.addToGame = function(numberOfPlayers) {
@@ -17,8 +17,8 @@ Game.prototype.assignId = function() {
 }
 
 function Player() {
-  this.score = 0;
-  this.currentTotal = 0;
+  this.score = 0,
+  this.currentTotal = 0
 }
 
 Player.prototype.addToCurrentTotal = function(rolledNumber) {
@@ -44,20 +44,45 @@ const displayPlayers = function(game) {
   game.players.forEach(function(player) {
     htmlForPlayer += "<div id=player" + player.id + "><h3>Player" + player.id + "'s Score:</h3><h4><span id=score" + player.id + "></span></h4><h4>Current Total:</h4><h5><span id=total" + player.id + "></span></h5></div>";
   });
-  $(".container").html(htmlForPlayer);
+  $("#game").html(htmlForPlayer);
+}
+
+const rollTheDice = function(game) {
+  $("#roll").click(function(event) {
+    event.preventDefault();
+    const result = randomInt();
+    $("#result").text(result);
+    if (result === 1) {
+    //   currentPlayer.resetCurrentTotal();
+    //   if (currentPlayer === player1) {
+    //     currentPlayer = player2;
+    //   } else {
+    //     currentPlayer = player1;
+    //   }
+    } else {
+    //   currentPlayer.addToCurrentTotal(result);
+    }
+  });
 }
 
 $(document).ready(function() {
-  let newGame = Game();
+  let newGame = new Game();
   $("#new-game").submit(function(event) {
     event.preventDefault();
     const players = parseInt($("input#number-of-players").val());
-    newGame.addToGame(players);
-    $("#new-game").hide();
-    displayPlayers(newGame);
+    if (players < 2 || players > 10) {
+      $("#game").show();
+      $("#game").text("Either not enough players or too many players!");
+    } else {
+      newGame.addToGame(players);
+      $("#new-game").hide();
+      displayPlayers(newGame);
+      $("#game").show();
+      $("#roll").show();
+      $("#hold").show();
+      $("#restart").show();
+    }
   });
-  // $("#score1").text(player1.score);
-  // $("#score2").text(player2.score);
   // $("#roll").click(function(event) {
   //   event.preventDefault();
   //   const result = randomInt();

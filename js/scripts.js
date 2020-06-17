@@ -35,7 +35,7 @@ $(document).ready(function() {
   let currentPlayer = player1;
   $("#score1").text(player1.score);
   $("#score2").text(player2.score);
-  $("#die-roll").click(function(event) {
+  $("#roll").click(function(event) {
     event.preventDefault();
     const result = randomInt();
     $("#result").text(result);
@@ -47,8 +47,22 @@ $(document).ready(function() {
         currentPlayer = player1;
       }
     } else {
-      currentPlayer.addToCurrentTotal();
+      currentPlayer.addToCurrentTotal(result);
     }
+    $("#total1").text(player1.currentTotal);
+    $("#total2").text(player2.currentTotal);
+  });
+  $("#hold").click(function(event) {
+    event.preventDefault();
+    currentPlayer.addToScore();
+    currentPlayer.resetCurrentTotal();
+    if (currentPlayer === player1) {
+      currentPlayer = player2;
+    } else {
+      currentPlayer = player1;
+    }
+    $("#score1").text(player1.score);
+    $("#score2").text(player2.score);
     $("#total1").text(player1.currentTotal);
     $("#total2").text(player2.currentTotal);
   });

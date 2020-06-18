@@ -45,36 +45,68 @@ const displayPlayers = function(game) {
     htmlForPlayer += "<div id=player" + player.id + "><h3>Player" + player.id + "'s Score:</h3><h4><span id=score" + player.id + "></span></h4><h4>Current Total:</h4><h5><span id=total" + player.id + "></span></h5></div>";
   });
   $("#game").html(htmlForPlayer);
+  for (let i = 1; i <= game.players.length; i++) {
+    $("#score" + i).text("0");
+    $("#total" + i).text("0");
+  }
 }
 
-const rollTheDice = function(game) {
-  $("#roll").click(function(event) {
-    event.preventDefault();
+const rollTheDice = function(game, currentPlayer) {
     const result = randomInt();
+    console.log(result);
+    $("#result").show();
     $("#result").text(result);
     if (result === 1) {
-    //   currentPlayer.resetCurrentTotal();
-    //   if (currentPlayer === player1) {
-    //     currentPlayer = player2;
-    //   } else {
-    //     currentPlayer = player1;
-    //   }
+      game.players[currentPlayer].resetCurrentTotal();
+      $("#total" + game.players[currentPlayer].id).text(game.players[currentPlayer].currentTotal);
+      if (currentPlayer === game.players.length - 1) {
+        currentPlayer = 0;
+      } else {
+        currentPlayer++;
+      }
     } else {
-    //   currentPlayer.addToCurrentTotal(result);
+      game.players[currentPlayer].addToCurrentTotal(result);
+      $("#total" + game.players[currentPlayer].id).text(game.players[currentPlayer].currentTotal);
     }
+  return currentPlayer;
+}
+
+const holdScore = function(game, currentPlayer) {
+  game.players[currentPlayer].addToScore();
+  game.players[currentPlayer].resetCurrentTotal();
+  $("#score" + game.players[currentPlayer].id).text(game.players[currentPlayer].score);
+  $("#total" + game.players[currentPlayer].id).text(game.players[currentPlayer].currentTotal);
+  if (currentPlayer === game.players.length - 1) {
+    currentPlayer = 0;
+  } else {
+    currentPlayer++;
+  }
+  return currentPlayer;
+}
+
+const restartGame = function(game) {
+  game.players.forEach(function(player) {
+    $("#player" + player.id).remove();
   });
+  $("#new-game").show();
+  $("#result").hide();
+  $("#roll").hide();
+  $("#hold").hide();
+  $("#restart").hide();
 }
 
 $(document).ready(function() {
-  let newGame = new Game();
   $("#new-game").submit(function(event) {
     event.preventDefault();
+    let newGame = new Game();
     const players = parseInt($("input#number-of-players").val());
+    newGame.addToGame(players);
+    let currentPlayer = 0;
+    $("input#number-of-players").val("");
     if (players < 2 || players > 10) {
       $("#game").show();
       $("#game").text("Either not enough players or too many players!");
     } else {
-      newGame.addToGame(players);
       $("#new-game").hide();
       displayPlayers(newGame);
       $("#game").show();
@@ -82,9 +114,16 @@ $(document).ready(function() {
       $("#hold").show();
       $("#restart").show();
     }
+    $("#roll").click(function() {
+      currentPlayer = rollTheDice(newGame, currentPlayer);
+    });
+    $("#hold").click(function() {
+      currentPlayer = holdScore(newGame, currentPlayer);
+    });
+    $("#restart").click(function() {
+      restartGame(newGame);
+    });
   });
-  // $("#roll").click(function(event) {
-  //   event.preventDefault();
   //   const result = randomInt();
   //   $("#result").text(result);
   //   if (result === 1) {
@@ -99,9 +138,6 @@ $(document).ready(function() {
   //   }
   //   $("#total1").text(player1.currentTotal);
   //   $("#total2").text(player2.currentTotal);
-  // });
-  // $("#hold").click(function(event) {
-  //   event.preventDefault();
   //   currentPlayer.addToScore();
   //   currentPlayer.resetCurrentTotal();
   //   if (currentPlayer === player1) {
@@ -113,5 +149,4 @@ $(document).ready(function() {
   //   $("#score2").text(player2.score);
   //   $("#total1").text(player1.currentTotal);
   //   $("#total2").text(player2.currentTotal);
-  // });
 });

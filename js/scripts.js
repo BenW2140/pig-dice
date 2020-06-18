@@ -53,12 +53,13 @@ const displayPlayers = function(game) {
 
 const rollTheDice = function(game, currentPlayer) {
     const result = randomInt();
-    console.log(result);
     $("#result").show();
     $("#result").text(result);
     if (result === 1) {
       game.players[currentPlayer].resetCurrentTotal();
-      $("#total" + game.players[currentPlayer].id).text(game.players[currentPlayer].currentTotal);
+      game.players.forEach(function(player) {
+        $("#total" + player.id).text(player.currentTotal);
+      });
       if (currentPlayer === game.players.length - 1) {
         currentPlayer = 0;
       } else {
@@ -66,7 +67,9 @@ const rollTheDice = function(game, currentPlayer) {
       }
     } else {
       game.players[currentPlayer].addToCurrentTotal(result);
-      $("#total" + game.players[currentPlayer].id).text(game.players[currentPlayer].currentTotal);
+      game.players.forEach(function(player) {
+        $("#total" + player.id).text(player.currentTotal);
+      });
     }
   return currentPlayer;
 }
@@ -74,8 +77,10 @@ const rollTheDice = function(game, currentPlayer) {
 const holdScore = function(game, currentPlayer) {
   game.players[currentPlayer].addToScore();
   game.players[currentPlayer].resetCurrentTotal();
-  $("#score" + game.players[currentPlayer].id).text(game.players[currentPlayer].score);
-  $("#total" + game.players[currentPlayer].id).text(game.players[currentPlayer].currentTotal);
+  game.players.forEach(function(player) {
+    $("#score" + player.id).text(player.score);
+    $("#total" + player.id).text(player.currentTotal);
+  });
   if (currentPlayer === game.players.length - 1) {
     currentPlayer = 0;
   } else {
@@ -84,15 +89,17 @@ const holdScore = function(game, currentPlayer) {
   return currentPlayer;
 }
 
-const restartGame = function(game) {
+const restartGame = function(game, currentPlayer) {
   game.players.forEach(function(player) {
     $("#player" + player.id).remove();
   });
+  currentPlayer = 0;
   $("#new-game").show();
   $("#result").hide();
   $("#roll").hide();
   $("#hold").hide();
   $("#restart").hide();
+  return currentPlayer;
 }
 
 $(document).ready(function() {
@@ -121,32 +128,7 @@ $(document).ready(function() {
       currentPlayer = holdScore(newGame, currentPlayer);
     });
     $("#restart").click(function() {
-      restartGame(newGame);
+      currentPlayer = restartGame(newGame, currentPlayer);
     });
   });
-  //   const result = randomInt();
-  //   $("#result").text(result);
-  //   if (result === 1) {
-  //     currentPlayer.resetCurrentTotal();
-  //     if (currentPlayer === player1) {
-  //       currentPlayer = player2;
-  //     } else {
-  //       currentPlayer = player1;
-  //     }
-  //   } else {
-  //     currentPlayer.addToCurrentTotal(result);
-  //   }
-  //   $("#total1").text(player1.currentTotal);
-  //   $("#total2").text(player2.currentTotal);
-  //   currentPlayer.addToScore();
-  //   currentPlayer.resetCurrentTotal();
-  //   if (currentPlayer === player1) {
-  //     currentPlayer = player2;
-  //   } else {
-  //     currentPlayer = player1;
-  //   }
-  //   $("#score1").text(player1.score);
-  //   $("#score2").text(player2.score);
-  //   $("#total1").text(player1.currentTotal);
-  //   $("#total2").text(player2.currentTotal);
 });
